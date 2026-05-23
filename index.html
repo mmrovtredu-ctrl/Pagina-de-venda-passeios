@@ -14,19 +14,13 @@
         /* ── DESIGN TOKENS ── */
         
          :root {
-            --radius: 1rem;
-            --deep: oklch(22% .1 245);
-            --ocean: oklch(45% .18 240);
             --sun: oklch(86% .18 92);
             --sun-glow: oklch(92% .14 95);
             --on-sun: oklch(16% .07 245);
             --background: oklch(16% .06 245);
             --foreground: oklch(98% .01 95);
             --card: oklch(22% .08 245);
-            --muted: oklch(26% .06 245);
             --muted-foreground: oklch(82% .03 240);
-            --border: oklch(100% 0 0/.12);
-            --ring: oklch(86% .18 92/.6);
             --font-display: 'Anton', 'Impact', system-ui, sans-serif;
             --font-sans: 'Inter', system-ui, sans-serif;
             --shadow-glow: 0 20px 60px -15px oklch(86% .18 92 / .4);
@@ -101,12 +95,6 @@
             box-shadow: inset 0 1px rgba(255, 255, 255, .18), 0 20px 50px -20px rgba(0, 0, 0, .5);
         }
         
-        .glass-strong {
-            backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(30px) saturate(180%);
-            background: rgba(255, 255, 255, .10);
-            border: 1px solid rgba(255, 255, 255, .18);
-        }
         
         .glass-blur {
             background: oklch(22% .1 245 / .28);
@@ -200,11 +188,6 @@
             padding: 0 1rem;
         }
         
-        .container-narrow {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
         /* ── NAV ── */
         
         header {
@@ -268,9 +251,6 @@
             color: var(--muted-foreground);
         }
         
-        .nav-links {
-            display: none;
-        }
         
         .hamburger {
             display: grid;
@@ -648,30 +628,6 @@
             object-position: center top;
         }
         
-        .about-badge-overlay {
-            position: absolute;
-            bottom: 1rem;
-            left: 1rem;
-            right: 1rem;
-            border-radius: 1rem;
-            padding: 1rem 1.2rem;
-        }
-        
-        .about-badge-label {
-            font-size: .65rem;
-            text-transform: uppercase;
-            letter-spacing: .2em;
-            color: var(--sun);
-            margin-bottom: .25rem;
-            display: flex;
-            align-items: center;
-            gap: .35rem;
-        }
-        
-        .about-badge-text {
-            font-size: .875rem;
-            color: var(--foreground);
-        }
         
         .about-stats {
             display: grid;
@@ -1302,77 +1258,6 @@
             background: rgba(255, 255, 255, .25);
             transform: translateY(-2px);
         }
-        /* ── INSTAGRAM ── */
-        
-        .instagram-section {
-            margin-top: 4rem;
-        }
-        
-        .instagram-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .ig-title {
-            font-family: var(--font-display);
-            font-size: 1.4rem;
-        }
-        
-        .ig-link {
-            display: inline-flex;
-            align-items: center;
-            gap: .5rem;
-            font-size: .72rem;
-            text-transform: uppercase;
-            letter-spacing: .18em;
-            color: var(--sun);
-            border: 1px solid oklch(86% .18 92 / .3);
-            border-radius: 9999px;
-            padding: .45rem 1.1rem;
-            transition: background .2s;
-        }
-        
-        .ig-link:hover {
-            background: oklch(86% .18 92 / .10);
-        }
-        
-        .ig-grid {
-            display: grid;
-            gap: .25rem;
-            grid-template-columns: repeat(3, 1fr);
-        }
-        
-        .ig-post {
-            aspect-ratio: 1;
-            background: oklch(22% .1 245);
-            border-radius: .5rem;
-            border: 1px solid rgba(255, 255, 255, .06);
-            overflow: hidden;
-            cursor: pointer;
-            transition: opacity .25s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: .4rem;
-            color: rgba(255, 255, 255, .25);
-            font-size: .6rem;
-            text-transform: uppercase;
-            letter-spacing: .14em;
-            text-align: center;
-        }
-        
-        .ig-post:hover {
-            opacity: .8;
-        }
-        
-        .ig-post svg {
-            opacity: .25;
-        }
         /* ── FAQ ── */
         
         .faq-section {
@@ -1728,7 +1613,6 @@
                 <div class="carrossel-wrapper">
                     <div class="carrossel-fade-left"></div>
                     <div class="carrossel-fade-right"></div>
-                    <!-- fotos da pesca oceânica — imagens reais dos passeios, peguei da pasta e coloquei direto aqui -->
                     <div class="carrossel-track" id="trackOceanica">
                         <div class="carrossel-slide">
                             <img src="Fotos%20oce%C3%A2nica/107292da-1a0b-4e21-b512-adcea497a607.jpeg" alt="Pesca Oceânica" style="width:100%;height:100%;object-fit:cover;border-radius:.75rem;">
@@ -2176,14 +2060,13 @@
             container.appendChild(p);
         }
 
+
         // ── NAV CTA visibility ──
         const navCta = document.getElementById('navCta');
         if (navCta) {
             const obs = new IntersectionObserver(entries => {
                 navCta.style.display = entries[0].isIntersecting ? 'none' : 'inline-flex';
-            }, {
-                threshold: 0
-            });
+            }, { threshold: 0 });
             obs.observe(document.querySelector('.hero-section'));
         }
 
@@ -2227,28 +2110,19 @@
             const track = document.getElementById(trackId);
             if (!track) return;
             const slides = Array.from(track.children);
-            // Clone all slides and append for seamless loop
             slides.forEach(slide => {
                 const clone = slide.cloneNode(true);
                 track.appendChild(clone);
             });
-            // Set animation based on total width
-            const slideWidth = 220 + 8; // width + gap
-            const totalWidth = slides.length * slideWidth;
+            const SLIDE_WIDTH = 220;  /* px — deve coincidir com .carrossel-slide { width } no CSS */
+            const SLIDE_GAP   = 8;   /* px — deve coincidir com margin-right: .5rem no CSS */
+            const totalWidth = slides.length * (SLIDE_WIDTH + SLIDE_GAP);
             track.style.setProperty('--total-width', totalWidth + 'px');
         }
 
         setupCarrossel('trackOceanica');
         setupCarrossel('trackCosteira');
 
-        // ── KEYBOARD ACCESSIBILITY for ig-posts ──
-        document.querySelectorAll('.ig-post').forEach(el => {
-            el.addEventListener('keydown', e => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    window.open('https://www.instagram.com/raphaelambrosiosub/', '_blank');
-                }
-            });
-        });
     </script>
 
 </body>
