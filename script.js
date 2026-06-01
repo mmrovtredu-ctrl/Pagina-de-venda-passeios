@@ -282,28 +282,122 @@ document.addEventListener("DOMContentLoaded", () => {
         return DATAS_BLOQUEADAS.includes(valor);
     };
 
-    // Data mínima = hoje + bind de validação
-    const dataInput = document.getElementById('dataDesejada');
-    if (dataInput) {
-        const hoje = new Date();
-        const yyyy = hoje.getFullYear();
-        const mm = String(hoje.getMonth() + 1).padStart(2, '0');
-        const dd = String(hoje.getDate()).padStart(2, '0');
-        dataInput.min = `${yyyy}-${mm}-${dd}`;
+    // ── CALENDÁRIO CUSTOMIZADO ──
+    const calTrigger  = document.getElementById('calTrigger');
+    const calPopover  = document.getElementById('calPopover');
+    const calGrid     = document.getElementById('calGrid');
+    const calMonthLbl = document.getElementById('calMonthLabel');
+    const calPrev     = document.getElementById('calPrev');
+    const calNext     = document.getElementById('calNext');
+    const calLabel    = document.getElementById('calTriggerLabel');
+    const dataInput   = document.getElementById('dataDesejada');
 
-        dataInput.addEventListener('change', () => {
-            if (validarDataBloqueada(dataInput.value)) {
-                dataInput.setCustomValidity('Esta data já está reservada. Por favor, escolha outra.');
-                dataInput.reportValidity();
-                dataInput.value = '';
+    const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                   'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+    const hoje = new Date();
+    hoje.setHours(0,0,0,0);
+
+    let calAno  = hoje.getFullYear();
+    let calMes  = hoje.getMonth();
+    let calOpen = false;
+
+    const toISO = (d) => {
+        const y = d.getFullYear();
+        const m = String(d.getMonth()+1).padStart(2,'0');
+        const dd = String(d.getDate()).padStart(2,'0');
+        return `${y}-${m}-${dd}`;
+    };
+
+    const renderCal = () => {
+        calMonthLbl.textContent = `${MESES[calMes]} ${calAno}`;
+        calGrid.innerHTML = '';
+
+        const primeiro = new Date(calAno, calMes, 1);
+        const ultimo   = new Date(calAno, calMes + 1, 0);
+        const inicioDia = primeiro.getDay(); // 0=Dom
+
+        // células vazias antes
+        for (let i = 0; i < inicioDia; i++) {
+            const vazio = document.createElement('span');
+            calGrid.appendChild(vazio);
+        }
+
+        const selecionado = dataInput ? dataInput.value : '';
+
+        for (let d = 1; d <= ultimo.getDate(); d++) {
+            const data = new Date(calAno, calMes, d);
+            data.setHours(0,0,0,0);
+            const iso  = toISO(data);
+            const btn  = document.createElement('button');
+            btn.type   = 'button';
+            btn.textContent = d;
+            btn.className = 'cal-day';
+
+            const passado  = data < hoje;
+            const bloqueado = DATAS_BLOQUEADAS.includes(iso);
+
+            if (passado) {
+                btn.classList.add('past');
+                btn.disabled = true;
+            } else if (bloqueado) {
+                btn.classList.add('blocked');
+                btn.disabled = true;
+                // bolinha vermelha via CSS pseudo-element (classe 'blocked')
             } else {
-                dataInput.setCustomValidity('');
+                btn.addEventListener('click', () => {
+                    const [ano,mes,dia] = iso.split('-');
+                    dataInput.value = iso;
+                    calLabel.textContent = `${dia}/${mes}/${ano}`;
+                    fecharCal();
+                });
             }
-        });
-    }
 
-    // Carrega as datas bloqueadas (async, não trava o restante)
-    carregarDatasCalendario();
+            if (iso === selecionado) btn.classList.add('selected');
+            if (iso === toISO(hoje)) btn.classList.add('today');
+
+            calGrid.appendChild(btn);
+        }
+    };
+
+    const abrirCal = () => {
+        calOpen = true;
+        calPopover.setAttribute('aria-hidden','false');
+        calPopover.classList.add('open');
+        calTrigger.setAttribute('aria-expanded','true');
+        renderCal();
+    };
+
+    const fecharCal = () => {
+        calOpen = false;
+        calPopover.setAttribute('aria-hidden','true');
+        calPopover.classList.remove('open');
+        calTrigger.setAttribute('aria-expanded','false');
+    };
+
+    if (calTrigger) calTrigger.addEventListener('click', () => calOpen ? fecharCal() : abrirCal());
+
+    if (calPrev) calPrev.addEventListener('click', () => {
+        calMes--;
+        if (calMes < 0) { calMes = 11; calAno--; }
+        renderCal();
+    });
+
+    if (calNext) calNext.addEventListener('click', () => {
+        calMes++;
+        if (calMes > 11) { calMes = 0; calAno++; }
+        renderCal();
+    });
+
+    // Fecha ao clicar fora
+    document.addEventListener('click', (e) => {
+        if (calOpen && !calTrigger.contains(e.target) && !calPopover.contains(e.target)) {
+            fecharCal();
+        }
+    });
+
+    // Carrega as datas bloqueadas e re-renderiza se calendário estiver aberto
+    carregarDatasCalendario().then(() => { if (calOpen) renderCal(); });
 
     // Formatação automática do WhatsApp
     const whatsappInput = document.getElementById('whatsapp');

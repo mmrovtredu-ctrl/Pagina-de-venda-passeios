@@ -452,7 +452,25 @@
 
                 <div class="form-group">
                     <label class="form-label" for="dataDesejada">Data Desejada</label>
-                    <input type="date" id="dataDesejada" class="form-input form-input-date">
+                    <input type="hidden" id="dataDesejada">
+                    <button type="button" class="form-input cal-trigger" id="calTrigger" aria-haspopup="true" aria-expanded="false">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                        <span id="calTriggerLabel">Selecione uma data</span>
+                    </button>
+                    <div class="cal-popover" id="calPopover" aria-hidden="true">
+                        <div class="cal-nav">
+                            <button type="button" class="cal-arrow" id="calPrev" aria-label="Mês anterior">‹</button>
+                            <span class="cal-month-label" id="calMonthLabel"></span>
+                            <button type="button" class="cal-arrow" id="calNext" aria-label="Próximo mês">›</button>
+                        </div>
+                        <div class="cal-weekdays">
+                            <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+                        </div>
+                        <div class="cal-grid" id="calGrid"></div>
+                        <div class="cal-legend">
+                            <span class="cal-legend-dot blocked"></span><span>Indisponível</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
