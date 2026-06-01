@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     
     // ── AVALIAÇÕES GOOGLE (Places API) ──
-    const PLACE_ID = 'ChIJ_aFgJNd_mQARsumRqFNqMsg';
-    const REVIEWS_KEY = 'AIzaSyD-PLACEHOLDER';
+    const PLACE_ID = 'ChIJ_aFgJNd_mQARsumRqFNqMsg'; // Bella Marina
+    const REVIEWS_KEY = 'AIzaSyD-PLACEHOLDER'; // ← Substitua pela sua chave da API
 
+    // Avaliações de fallback para exibir enquanto a API não está configurada
     const fallbackReviews = [
         {
             author_name: 'Carlos Mendes',
@@ -31,14 +32,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const starsEl = document.getElementById('reviewsStars');
         const totalEl = document.getElementById('reviewsTotal');
 
-        if (scoreNum && rating) scoreNum.textContent = rating.toFixed(1);
-        if (starsEl && rating) starsEl.textContent = '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
-        if (totalEl && totalRatings) totalEl.textContent = `${totalRatings} avaliações`;
+        if (scoreNum && rating) {
+            scoreNum.textContent = rating.toFixed(1);
+        }
+        if (starsEl && rating) {
+            starsEl.textContent = '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
+        }
+        if (totalEl && totalRatings) {
+            totalEl.textContent = `${totalRatings} avaliações`;
+        }
 
         if (!grid) return;
         grid.innerHTML = '';
 
-        reviews.slice(0, 3).forEach(r => {
+        const top3 = reviews.slice(0, 3);
+        top3.forEach(r => {
             const initial = r.author_name ? r.author_name.charAt(0).toUpperCase() : '?';
             const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
             const card = document.createElement('div');
@@ -59,22 +67,30 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const loadGoogleReviews = () => {
+        // Se a chave ainda é placeholder, usa fallback
         if (REVIEWS_KEY === 'AIzaSyD-PLACEHOLDER') {
             renderReviews(fallbackReviews, 5.0, null);
             return;
         }
+
         const script = document.createElement('script');
         const callbackName = 'googlePlacesCallback_' + Date.now();
+
         window[callbackName] = (data) => {
             delete window[callbackName];
             script.remove();
             if (data && data.result) {
                 const r = data.result;
-                renderReviews(r.reviews || fallbackReviews, r.rating, r.user_ratings_total);
+                renderReviews(
+                    r.reviews || fallbackReviews,
+                    r.rating,
+                    r.user_ratings_total
+                );
             } else {
                 renderReviews(fallbackReviews, 5.0, null);
             }
         };
+
         const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${PLACE_ID}&fields=rating,user_ratings_total,reviews&reviews_sort=newest&key=${REVIEWS_KEY}&callback=${callbackName}`;
         script.src = url;
         script.onerror = () => renderReviews(fallbackReviews, 5.0, null);
@@ -83,10 +99,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadGoogleReviews();
 
-    // ── PARTÍCULAS NO HERO ──
+    // ── CONFIGURAÇÃO DE PARTICULAS NO HERO ──
     const particlesContainer = document.getElementById('particles');
     if (particlesContainer) {
-        for (let i = 0; i < 15; i++) {
+        const particleCount = 15;
+        for (let i = 0; i < particleCount; i++) {
             const particle = document.createElement('div');
             particle.classList.add('particle');
             particle.style.left = Math.random() * 100 + '%';
@@ -96,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ── MENU MOBILE ──
+    // ── GESTÃO DO MENU MOBILE ──
     const mobileMenu = document.getElementById('mobileMenu');
     const openMenuBtn = document.getElementById('openMenuBtn');
     const closeMenuBtn = document.getElementById('closeMenuBtn');
@@ -110,35 +127,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (openMenuBtn) openMenuBtn.addEventListener('click', () => toggleMenu(true));
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', () => toggleMenu(false));
-    menuLinks.forEach(link => link.addEventListener('click', () => toggleMenu(false)));
-
-    // ── HEADER SCROLL ──
-    const header = document.getElementById('mainHeader');
-    const navCta = document.getElementById('navCta');
-    window.addEventListener('scroll', () => {
-        const scrollPos = window.scrollY;
-        if (header) header.classList.toggle('scrolled', scrollPos > 50);
-        if (navCta) navCta.style.display = scrollPos > 400 ? 'inline-flex' : 'none';
+    
+    menuLinks.forEach(link => {
+        link.addEventListener('click', () => toggleMenu(false));
     });
 
-    // ── CARROSSEL (LOOP CONTÍNUO) ──
+    // ── HEADER VISUAL SCROLL & CTA REVEAL ──
+    const header = document.getElementById('mainHeader');
+    const navCta = document.getElementById('navCta');
+
+    window.addEventListener('scroll', () => {
+        const scrollPos = window.scrollY;
+        
+        if (header) {
+            header.classList.toggle('scrolled', scrollPos > 50);
+        }
+
+        if (navCta) {
+            navCta.style.display = scrollPos > 400 ? 'inline-flex' : 'none';
+        }
+    });
+
+    // ── CARROSSEL (LOOP CONTINUO) ──
     const setupCarrossel = (trackId) => {
         const track = document.getElementById(trackId);
         if (!track) return;
+
         const slides = Array.from(track.children);
-        slides.forEach(slide => track.appendChild(slide.cloneNode(true)));
-        const totalWidth = slides.length * (220 + 8);
+        slides.forEach(slide => {
+            const clone = slide.cloneNode(true);
+            track.appendChild(clone);
+        });
+
+        const SLIDE_WIDTH = 220; 
+        const SLIDE_GAP = 8; 
+        const totalWidth = slides.length * (SLIDE_WIDTH + SLIDE_GAP);
         track.style.setProperty('--total-width', `${totalWidth}px`);
     };
 
     setupCarrossel('trackCosteira');
     setupCarrossel('trackOceanica');
 
-    // ── FAQ ACCORDION ──
+    // ── ACCORDION DO FAQ ──
     const faqItems = document.querySelectorAll('.faq-item');
     faqItems.forEach(item => {
         const btn = item.querySelector('.faq-btn');
         if (!btn) return;
+
         btn.addEventListener('click', () => {
             const wasOpen = item.classList.contains('open');
             faqItems.forEach(i => i.classList.remove('open'));
@@ -146,16 +181,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // ── REVEAL ON SCROLL ──
+    // ── INTERSECTION OBSERVER PARA REVEAL ON SCROLL ──
+    const revealElements = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('visible');
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
         });
     }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // ── FORMULÁRIO ──
+    revealElements.forEach(el => observer.observe(el));
 
+    // ── FORMULÁRIO DE RESERVA ──
+
+    // Seletor de material
     let materialSelecionado = null;
     document.querySelectorAll('.material-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -165,6 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Seletor de tamanho do grupo
     let grupoSelecionado = null;
     document.querySelectorAll('.group-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -174,6 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Seletor de tipo de saída
     let saidaSelecionada = null;
     document.querySelectorAll('.saida-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -183,10 +225,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Se vier de um card de passeio, pré-seleciona o tipo
+    const hash = window.location.hash;
+    if (hash === '#reservar') {
+        // já está na seção certa
+    }
+
     // Pré-seleção por clique nos cards de passeio
     document.querySelectorAll('.btn-reserva').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const tipo = btn.classList.contains('btn-costeira-reserva') ? 'Costeira' : 'Oceânica';
+        btn.addEventListener('click', (e) => {
+            const isCosteira = btn.classList.contains('btn-costeira-reserva');
+            const tipo = isCosteira ? 'Costeira' : 'Oceânica';
             setTimeout(() => {
                 document.querySelectorAll('.saida-btn').forEach(b => {
                     b.classList.toggle('active', b.dataset.value === tipo);
@@ -196,7 +245,44 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Data mínima = hoje
+    // ── GOOGLE CALENDAR — DATAS BLOQUEADAS ──
+    const CALENDAR_ID = 'raphael.sub@gmail.com';
+    const CALENDAR_KEY = 'AIzaSyDAWLXs6H2O2EUESLn1IVvQSKurihR0XcE';
+    let DATAS_BLOQUEADAS = [];
+
+    const carregarDatasCalendario = async () => {
+        try {
+            const hoje = new Date();
+            const daqui6meses = new Date();
+            daqui6meses.setMonth(daqui6meses.getMonth() + 6);
+
+            const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events`
+                + `?key=${CALENDAR_KEY}`
+                + `&timeMin=${hoje.toISOString()}`
+                + `&timeMax=${daqui6meses.toISOString()}`
+                + `&singleEvents=true`;
+
+            const res = await fetch(url);
+            const data = await res.json();
+
+            if (data.items) {
+                data.items.forEach(evento => {
+                    const dataEvento = evento.start.date || evento.start.dateTime?.split('T')[0];
+                    if (dataEvento) DATAS_BLOQUEADAS.push(dataEvento);
+                });
+            }
+        } catch (_) {
+            // falha silenciosa — o campo de data continua funcionando normalmente
+        }
+    };
+
+    // Valida se a data escolhida está bloqueada
+    const validarDataBloqueada = (valor) => {
+        if (!valor || DATAS_BLOQUEADAS.length === 0) return false;
+        return DATAS_BLOQUEADAS.includes(valor);
+    };
+
+    // Data mínima = hoje + bind de validação
     const dataInput = document.getElementById('dataDesejada');
     if (dataInput) {
         const hoje = new Date();
@@ -204,23 +290,38 @@ document.addEventListener("DOMContentLoaded", () => {
         const mm = String(hoje.getMonth() + 1).padStart(2, '0');
         const dd = String(hoje.getDate()).padStart(2, '0');
         dataInput.min = `${yyyy}-${mm}-${dd}`;
+
+        dataInput.addEventListener('change', () => {
+            if (validarDataBloqueada(dataInput.value)) {
+                dataInput.setCustomValidity('Esta data já está reservada. Por favor, escolha outra.');
+                dataInput.reportValidity();
+                dataInput.value = '';
+            } else {
+                dataInput.setCustomValidity('');
+            }
+        });
     }
+
+    // Carrega as datas bloqueadas (async, não trava o restante)
+    carregarDatasCalendario();
 
     // Formatação automática do WhatsApp
     const whatsappInput = document.getElementById('whatsapp');
     if (whatsappInput) {
         whatsappInput.addEventListener('input', (e) => {
             let v = e.target.value.replace(/\D/g, '').slice(0, 11);
-            if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
-            else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
-            else if (v.length > 0) v = `(${v}`;
+            if (v.length > 6) {
+                v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+            } else if (v.length > 2) {
+                v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+            } else if (v.length > 0) {
+                v = `(${v}`;
+            }
             e.target.value = v;
         });
     }
 
-    // ── ENVIO → PLANILHA + WHATSAPP ──
-    const PLANILHA_URL = 'https://script.google.com/macros/s/AKfycbyC3n_Z4PyQVChm36iodDdlGitZ9NpJBr554fNRtQ7ZuaP5rW-Jt7BLJTnpvVmmqPnE5Q/exec';
-
+    // Envio do formulário → WhatsApp
     const btnEnviar = document.getElementById('btnEnviar');
     if (btnEnviar) {
         btnEnviar.addEventListener('click', () => {
@@ -230,24 +331,44 @@ document.addEventListener("DOMContentLoaded", () => {
             const obs = document.getElementById('observacoes').value.trim();
 
             // Validações
-            if (!nome) { alert('Por favor, informe seu nome completo.'); document.getElementById('nomeCompleto').focus(); return; }
-            if (!whatsapp || whatsapp.replace(/\D/g, '').length < 10) { alert('Por favor, informe um número de WhatsApp válido.'); document.getElementById('whatsapp').focus(); return; }
-            if (!grupoSelecionado) { alert('Por favor, selecione o tamanho do grupo.'); return; }
-            if (!saidaSelecionada) { alert('Por favor, selecione o tipo de saída.'); return; }
-            if (!materialSelecionado) { alert('Por favor, selecione se vai precisar de material de pesca.'); return; }
-            if (!dataVal) { alert('Por favor, selecione a data desejada.'); document.getElementById('dataDesejada').focus(); return; }
+            if (!nome) {
+                alert('Por favor, informe seu nome completo.');
+                document.getElementById('nomeCompleto').focus();
+                return;
+            }
+            if (!whatsapp || whatsapp.replace(/\D/g, '').length < 10) {
+                alert('Por favor, informe um número de WhatsApp válido.');
+                document.getElementById('whatsapp').focus();
+                return;
+            }
+            if (!grupoSelecionado) {
+                alert('Por favor, selecione o tamanho do grupo.');
+                return;
+            }
+            if (!saidaSelecionada) {
+                alert('Por favor, selecione o tipo de saída.');
+                return;
+            }
+            if (!materialSelecionado) {
+                alert('Por favor, selecione se vai precisar de material de pesca.');
+                return;
+            }
+            if (!dataVal) {
+                alert('Por favor, selecione a data desejada.');
+                document.getElementById('dataDesejada').focus();
+                return;
+            }
+            if (validarDataBloqueada(dataVal)) {
+                alert('Esta data já está reservada. Por favor, escolha outra data disponível.');
+                document.getElementById('dataDesejada').focus();
+                return;
+            }
 
+            // Formata a data para PT-BR
             const [ano, mes, dia] = dataVal.split('-');
             const dataFormatada = `${dia}/${mes}/${ano}`;
 
-            // Envia para a planilha Google (apenas data/hora, nome e whatsapp)
-            fetch(PLANILHA_URL, {
-                method: 'POST',
-                body: JSON.stringify({ nome, whatsapp }),
-                headers: { 'Content-Type': 'application/json' }
-            }).catch(() => {});
-
-            // Monta e abre o WhatsApp
+            // Monta a mensagem
             let msg = `Olá, Raphael! Gostaria de fazer uma reserva. 🎣\n\n`;
             msg += `*Nome:* ${nome}\n`;
             msg += `*WhatsApp:* ${whatsapp}\n`;
@@ -255,9 +376,13 @@ document.addEventListener("DOMContentLoaded", () => {
             msg += `*Tipo de saída:* Pesca ${saidaSelecionada}\n`;
             msg += `*Data desejada:* ${dataFormatada}\n`;
             msg += `*Material de pesca:* ${materialSelecionado}\n`;
-            if (obs) msg += `*Observações:* ${obs}\n`;
+            if (obs) {
+                msg += `*Observações:* ${obs}\n`;
+            }
 
-            window.open(`https://wa.me/5524999037644?text=${encodeURIComponent(msg)}`, '_blank');
+            const numero = '5524999037644';
+            const urlWpp = `https://wa.me/${numero}?text=${encodeURIComponent(msg)}`;
+            window.open(urlWpp, '_blank');
         });
     }
 });
