@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
         track.style.setProperty('--total-width', `${totalWidth}px`);
     };
 
+    setupCarrossel('trackCosteira');
     setupCarrossel('trackOceanica');
 
     // ── ACCORDION DO FAQ ──
@@ -94,6 +95,16 @@ document.addEventListener("DOMContentLoaded", () => {
     revealElements.forEach(el => observer.observe(el));
 
     // ── FORMULÁRIO DE RESERVA ──
+
+    // Seletor de material
+    let materialSelecionado = null;
+    document.querySelectorAll('.material-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.material-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            materialSelecionado = btn.dataset.value;
+        });
+    });
 
     // Seletor de tamanho do grupo
     let grupoSelecionado = null;
@@ -189,6 +200,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert('Por favor, selecione o tipo de saída.');
                 return;
             }
+            if (!materialSelecionado) {
+                alert('Por favor, selecione se vai precisar de material de pesca.');
+                return;
+            }
             if (!dataVal) {
                 alert('Por favor, selecione a data desejada.');
                 document.getElementById('dataDesejada').focus();
@@ -206,6 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
             msg += `*Grupo:* ${grupoSelecionado} ${grupoSelecionado === '1' ? 'pessoa' : 'pessoas'}\n`;
             msg += `*Tipo de saída:* Pesca ${saidaSelecionada}\n`;
             msg += `*Data desejada:* ${dataFormatada}\n`;
+            msg += `*Material de pesca:* ${materialSelecionado}\n`;
             if (obs) {
                 msg += `*Observações:* ${obs}\n`;
             }
