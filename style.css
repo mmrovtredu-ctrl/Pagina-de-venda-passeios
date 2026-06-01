@@ -828,14 +828,17 @@ section.main-section {
     border-radius: 1.5rem;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, .10);
+    aspect-ratio: 3 / 4;
+    width: 100%;
+    max-height: 480px;
 }
 
-.about-photo-placeholder {
-    height: 320px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: oklch(20% .05 245);
+.about-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
 }
 
 .about-list {
