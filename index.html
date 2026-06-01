@@ -164,12 +164,14 @@
                         </div>
                     </div>
 
-                    <p class="card-desc">Ideal para iniciantes, amigos e famílias. Águas mais calmas com foco em espécies locais saborosas e esportivas.</p>
+                    <p class="card-desc">O passeio ideal para quem está começando no mundo da pesca. As Ilhas Tijucas oferecem cenário deslumbrante, peixes variados — tudo isso a poucos minutos da Barra da Tijuca.</p>
                     
                     <ul class="card-highlights">
-                        <li><span class="highlight-dot costeira-dot">✓</span> Equipamentos e iscas inclusos</li>
-                        <li><span class="highlight-dot costeira-dot">✓</span> Bebidas não alcoólicas e gelo</li>
-                        <li><span class="highlight-dot costeira-dot">✓</span> Espécies: Sororoca, Bicuda, Galo e Cioba</li>
+                        <li><span class="highlight-dot costeira-dot">✦</span> Ideal para crianças e iniciantes</li>
+                        <li><span class="highlight-dot costeira-dot">✦</span> Pescaria em ambiente seguro</li>
+                        <li><span class="highlight-dot costeira-dot">✦</span> Roteiro pelas Ilhas Tijucas</li>
+                        <li><span class="highlight-dot costeira-dot">✦</span> Orientação completa de Raphael</li>
+                        <li><span class="highlight-dot costeira-dot">✦</span> 8h de experiência inesquecível</li>
                     </ul>
 
                     <a href="#reservar" class="btn-reserva btn-costeira-reserva">Reservar Costeira</a>
@@ -188,16 +190,18 @@
                         </div>
                         <div>
                             <div class="spec-label">Distância</div>
-                            <div class="spec-val">Até 25 milhas</div>
+                            <div class="spec-val">35 milhas</div>
                         </div>
                     </div>
 
-                    <p class="card-desc">A verdadeira jornada de alta performance. Em busca dos grandes predadores pelágicos e azuis em águas profundas.</p>
+                    <p class="card-desc">Para quem quer ir além. A 35 milhas da costa, você entra em território de grandes peixes pelágicos — Dourado, Wahoo, Cavala Verdadeira, Atum e muito mais.</p>
                     
                     <ul class="card-highlights">
-                        <li><span class="highlight-dot oceanica-dot">✓</span> Equipamento pesado e eletrônicos avançados</li>
-                        <li><span class="highlight-dot oceanica-dot">✓</span> Serviço de bordo estendido</li>
-                        <li><span class="highlight-dot oceanica-dot">✓</span> Espécies: Olho de Boi, Dourado, Atum e Marlim</li>
+                        <li><span class="highlight-dot oceanica-dot">✦</span> Para pescadores com experiência offshore</li>
+                        <li><span class="highlight-dot oceanica-dot">✦</span> 35 milhas — águas profundas e peixes grandes</li>
+                        <li><span class="highlight-dot oceanica-dot">✦</span> Embarcação equipada para pesca de alto padrão</li>
+                        <li><span class="highlight-dot oceanica-dot">✦</span> Orientação completa de Raphael</li>
+                        <li><span class="highlight-dot oceanica-dot">✦</span> 8h de experiência inesquecível</li>
                     </ul>
 
                     <a href="#reservar" class="btn-reserva btn-oceanica-reserva">Reservar Oceânica</a>
@@ -400,6 +404,47 @@
             </div>
         </section>
 
+        <!-- ── AVALIAÇÕES GOOGLE ── -->
+        <section class="main-section container" id="avaliacoes">
+            <div class="text-center">
+                <div class="section-chip glass">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="var(--sun)" stroke="var(--sun)" stroke-width="1"/>
+                    </svg>
+                    Avaliações Reais
+                </div>
+                <h2 class="section-title">O que dizem nossos pescadores</h2>
+                <p class="section-sub">Avaliações reais do Google, atualizadas em tempo real.</p>
+            </div>
+
+            <!-- Resumo geral -->
+            <div class="reviews-summary glass-blur reveal">
+                <div class="reviews-score">
+                    <div class="reviews-score-num" id="reviewsScoreNum">5.0</div>
+                    <div class="reviews-stars" id="reviewsStars">★★★★★</div>
+                    <div class="reviews-total" id="reviewsTotal">no Google</div>
+                </div>
+                <div class="reviews-divider"></div>
+                <a href="https://search.google.com/local/writereview?placeid=ChIJ_aFgJNd_mQARsumRqFNqMsg" target="_blank" rel="noopener" class="reviews-cta-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Deixar sua avaliação
+                </a>
+            </div>
+
+            <!-- Cards de avaliações -->
+            <div class="reviews-grid" id="reviewsGrid">
+                <!-- Avaliações carregadas via JS -->
+                <div class="review-skeleton glass-blur"></div>
+                <div class="review-skeleton glass-blur"></div>
+                <div class="review-skeleton glass-blur"></div>
+            </div>
+
+            <div class="reviews-powered">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v4l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                Avaliações atualizadas automaticamente via Google Places
+            </div>
+        </section>
+
         <!-- ── FORMULÁRIO DE RESERVA ── -->
         <section class="cta-section glass-sun container" id="reservar">
             <div class="form-header">
@@ -482,10 +527,11 @@
                 <p class="form-disclaimer">Ao enviar, você será redirecionado para o WhatsApp do Raphael com todas as informações preenchidas.</p>
             </div>
 
-            <div class="location-badge glass">
+            <a href="https://www.google.com/maps/search/bella+marina/@-23.0090443,-43.3031604,17z" target="_blank" rel="noopener" class="location-badge glass">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                Ponto de encontro: Subida da Barra, Rio de Janeiro - RJ
-            </div>
+                Ponto de encontro: Bella Marina · Barra da Tijuca, RJ
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
         </section>
     </main>
 

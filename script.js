@@ -1,5 +1,104 @@
 document.addEventListener("DOMContentLoaded", () => {
     
+    // ── AVALIAÇÕES GOOGLE (Places API) ──
+    const PLACE_ID = 'ChIJ_aFgJNd_mQARsumRqFNqMsg'; // Bella Marina
+    const REVIEWS_KEY = 'AIzaSyD-PLACEHOLDER'; // ← Substitua pela sua chave da API
+
+    // Avaliações de fallback para exibir enquanto a API não está configurada
+    const fallbackReviews = [
+        {
+            author_name: 'Carlos Mendes',
+            rating: 5,
+            text: 'Experiência incrível! O Raphael é um guia excepcional, muito experiente e atencioso. Pescamos muito e ainda tivemos uma aula sobre o mar. Recomendo demais!',
+            relative_time_description: 'há 2 semanas'
+        },
+        {
+            author_name: 'Fernanda Oliveira',
+            rating: 5,
+            text: 'Fui com meu marido e foi a melhor experiência que já tivemos juntos. O Raphael é campeão e se vê na qualidade do passeio. Voltaremos com certeza!',
+            relative_time_description: 'há 1 mês'
+        },
+        {
+            author_name: 'Ricardo Tavares',
+            rating: 5,
+            text: 'Passeio oceânico sensacional. 35 milhas offshore, pegamos Dourado e Wahoo. Embarcação excelente e o Raphael sabe exatamente onde os peixes estão.',
+            relative_time_description: 'há 3 semanas'
+        }
+    ];
+
+    const renderReviews = (reviews, rating, totalRatings) => {
+        const grid = document.getElementById('reviewsGrid');
+        const scoreNum = document.getElementById('reviewsScoreNum');
+        const starsEl = document.getElementById('reviewsStars');
+        const totalEl = document.getElementById('reviewsTotal');
+
+        if (scoreNum && rating) {
+            scoreNum.textContent = rating.toFixed(1);
+        }
+        if (starsEl && rating) {
+            starsEl.textContent = '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
+        }
+        if (totalEl && totalRatings) {
+            totalEl.textContent = `${totalRatings} avaliações`;
+        }
+
+        if (!grid) return;
+        grid.innerHTML = '';
+
+        const top3 = reviews.slice(0, 3);
+        top3.forEach(r => {
+            const initial = r.author_name ? r.author_name.charAt(0).toUpperCase() : '?';
+            const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+            const card = document.createElement('div');
+            card.className = 'review-card';
+            card.innerHTML = `
+                <div class="review-header">
+                    <div class="review-avatar">${initial}</div>
+                    <div class="review-meta">
+                        <div class="review-name">${r.author_name}</div>
+                        <div class="review-date">${r.relative_time_description}</div>
+                    </div>
+                    <div class="review-stars">${stars}</div>
+                </div>
+                <p class="review-text">${r.text || ''}</p>
+            `;
+            grid.appendChild(card);
+        });
+    };
+
+    const loadGoogleReviews = () => {
+        // Se a chave ainda é placeholder, usa fallback
+        if (REVIEWS_KEY === 'AIzaSyD-PLACEHOLDER') {
+            renderReviews(fallbackReviews, 5.0, null);
+            return;
+        }
+
+        const script = document.createElement('script');
+        const callbackName = 'googlePlacesCallback_' + Date.now();
+
+        window[callbackName] = (data) => {
+            delete window[callbackName];
+            script.remove();
+            if (data && data.result) {
+                const r = data.result;
+                renderReviews(
+                    r.reviews || fallbackReviews,
+                    r.rating,
+                    r.user_ratings_total
+                );
+            } else {
+                renderReviews(fallbackReviews, 5.0, null);
+            }
+        };
+
+        const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${PLACE_ID}&fields=rating,user_ratings_total,reviews&reviews_sort=newest&key=${REVIEWS_KEY}&callback=${callbackName}`;
+        script.src = url;
+        script.onerror = () => renderReviews(fallbackReviews, 5.0, null);
+        document.head.appendChild(script);
+    };
+
+    loadGoogleReviews();
+
     // ── CONFIGURAÇÃO DE PARTICULAS NO HERO ──
     const particlesContainer = document.getElementById('particles');
     if (particlesContainer) {

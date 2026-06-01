@@ -1225,6 +1225,167 @@ section.main-section {
 
 .material-btn.active .material-btn-detalhe { color: oklch(16% .07 245 / .75); }
 
+/* ── AVALIAÇÕES GOOGLE ── */
+.reviews-summary {
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin: 1.75rem 0 1.5rem;
+}
+
+.reviews-score {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.reviews-score-num {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--sun-glow), var(--sun));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.reviews-stars {
+    color: var(--sun);
+    font-size: 1.1rem;
+    letter-spacing: .05em;
+    margin: .2rem 0 .25rem;
+}
+
+.reviews-total {
+    font-size: .7rem;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: .12em;
+}
+
+.reviews-divider {
+    width: 1px;
+    height: 3.5rem;
+    background: rgba(255,255,255,.12);
+    flex-shrink: 0;
+}
+
+.reviews-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .75rem 1rem;
+    border-radius: .85rem;
+    background: oklch(86% .18 92 / .12);
+    border: 1px solid oklch(86% .18 92 / .28);
+    color: var(--sun);
+    font-size: .8rem;
+    font-weight: 600;
+    transition: all .2s;
+    text-align: center;
+    line-height: 1.35;
+}
+
+.reviews-cta-btn:hover {
+    background: oklch(86% .18 92 / .2);
+    transform: translateY(-1px);
+}
+
+.reviews-grid {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+}
+
+.review-card {
+    background: oklch(22% .08 245 / .65);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 1.1rem;
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    transition: border-color .2s;
+}
+
+.review-card:hover { border-color: oklch(86% .18 92 / .22); }
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.review-avatar {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sun-glow), var(--sun));
+    color: var(--on-sun);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.review-meta { flex: 1; min-width: 0; }
+.review-name {
+    font-weight: 600;
+    font-size: .88rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.review-date { font-size: .7rem; color: var(--muted-foreground); margin-top: .1rem; }
+
+.review-stars { color: var(--sun); font-size: .9rem; letter-spacing: .04em; }
+
+.review-text {
+    font-size: .85rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+}
+
+.review-skeleton {
+    height: 6rem;
+    border-radius: 1.1rem;
+    animation: shimmer 1.5s ease-in-out infinite;
+    background: linear-gradient(90deg, oklch(22% .08 245 / .4) 25%, oklch(28% .08 245 / .5) 50%, oklch(22% .08 245 / .4) 75%);
+    background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.reviews-powered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    font-size: .68rem;
+    color: var(--muted-foreground);
+    opacity: .55;
+    margin-top: 1rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+}
+
+/* location-badge como link */
+a.location-badge {
+    display: inline-flex;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    text-decoration: none;
+}
+a.location-badge:hover {
+    border-color: rgba(255,255,255,.25);
+    background: oklch(28% .1 245 / .85);
+}
+
 /* ── FORMULÁRIO DE RESERVA ── */
 .form-header { margin-bottom: 1.75rem; }
 
